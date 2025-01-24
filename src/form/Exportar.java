@@ -7,7 +7,7 @@ package form;
 import file.*;
 import java.util.ArrayList;
 import java.util.List;
-import model.*;
+import model.Data;
 
 public class Exportar {
     
@@ -218,7 +218,8 @@ public class Exportar {
         for(String tx : dig){
             
             Data d = new Data(tx);
-            Hora h = new Hora(tx);
+            
+            boolean no_use_br = true;
             
             boolean into_1 = tx.charAt(0) == '(';
             boolean into_2 = tx.charAt(0) == '[';
@@ -234,16 +235,23 @@ public class Exportar {
             
             if(val){
                 txt += br;
-                val = false;
+                no_use_br = false;
             }
+            
+            val = false;
             
             if(tx.contains("<")){//if
                 
                 this.tag = true;
                 
+                String lig[] = tx.split("<");
+                
                 if(!meta){
+                    txt += lig[0];
                     txt += "<span>";
-                    txt += tx;
+                    if(lig.length >= 2){
+                        txt += lig[1];
+                    }
                     meta = true;
                 }
                 
@@ -251,45 +259,38 @@ public class Exportar {
                 
                 this.tag = true;
                 
+                String lig[] = tx.split(">");
+                
                 if(meta){
+                    txt += lig[0];
                     txt += "</span>";
-                    txt += tx;
+                    if(lig.length >= 2){
+                        txt += lig[1];
+                    }
                     meta = false;
                 }
                 
             } else if(tx.equalsIgnoreCase("-") || tx.equalsIgnoreCase("|")){//if
                 
-                txt += br;
+                if(no_use_br){txt += br;}
                 
             } else if(into){//if
                 
-                if(use){
-                    txt += br;
-                }
+                val = true;
                 
                 txt += tx;
                 
             } else if(d.Val()){//if
                 
-                if(use){
-                    txt += br;
-                    val = true;
-                }
+                val = true;
                 
-                txt += d.DataCompleta(use);
+                if(no_use_br){txt += br;}
                 
-            } else if(h.Val()){//if
-                
-                if(use){
-                    txt += br;
-                    val = true;
-                }
-                
-                txt += h.getNodeHora(true);
+                txt += d.DataCompleta(true);
                 
             } else if(end){
                 
-                if(use){val = true;}
+                val = true;
                 
                 txt += tx;
                 
@@ -297,10 +298,6 @@ public class Exportar {
                 
                 txt += " ";
                 txt += tx.toLowerCase();
-                
-            } else if(tx.length() == 1){
-                
-                tx += tx.toUpperCase();
                 
             } else if(use){
                 
