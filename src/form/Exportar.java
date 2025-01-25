@@ -53,6 +53,38 @@ public class Exportar {
         
     }//Number(int numb)
     
+    private String phrase(String dig, int note){
+        
+        String txt = "";
+        
+        for(int t = 0; t < dig.length(); t++){
+            
+            char ds = dig.charAt(t);
+            
+            switch(ds){
+                
+                case'\\' ->{
+                    if(this.meta){
+                        txt += "\\";
+                    } else if(note == 0){
+                        txt += "";
+                    } else {
+                        txt += "<br/>";
+                    }
+                }
+                
+                default ->{
+                    txt += ds;
+                }
+                
+            }//switch(ds)
+            
+        }//for(int t = 0; t < dig.length(); t++)
+        
+        return txt;
+        
+    }//phrase(String dig)
+    
     private String Tag(String dig){
         
         String txt = "";
@@ -185,7 +217,7 @@ public class Exportar {
                 
                 col = 1;
                 
-                txt += tx;
+                txt += phrase(tx, col);
                 
             } else if(end){//if
                 
@@ -193,7 +225,7 @@ public class Exportar {
                 
                 col = 2;
                 
-                txt += tx;
+                txt += phrase(tx, col);
                 
             } else if(tx.length() == 1){//if
                 
@@ -217,7 +249,7 @@ public class Exportar {
                 
                 col = 1;
                 
-                txt += tx;
+                txt += phrase(tx, col);
                 
             }//if
             
