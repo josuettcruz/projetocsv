@@ -244,13 +244,22 @@ public class Text extends javax.swing.JFrame {
             
             String node = "";
             
-            if(txt.getText().replaceAll("\n", "").trim().isBlank()){
-                val_text = true;
-            } else if(this.index > 0){
-                int number = this.index+1;
-                node = "Índice " + number;
+            int number = this.index+1;
+            
+            val_text = txt.getText().replaceAll("\n", "").trim().isBlank();
+            
+            if(this.index <= 0){
+                node = "001";
+            } else if(number < 10){
+                node = "00";
+                node += number;
+            } else if(number < 100){
+                node = "0";
+                node += number;
+            } else if(number < 1000){
+                node += number;
             } else {
-                node = "Indice 1";
+                node = "";
             }
             
             title.setText(node);

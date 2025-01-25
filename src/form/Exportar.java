@@ -251,39 +251,7 @@ public class Exportar {
     
     private String P(String paragraphy, String link){
         
-        String href[] = link.split("/");
-        
-        String web = "www.web.com";
-        
-        String p_title = "HIPERLINK";
-        
-        for(int g = href.length-1; g >= 0; g--){
-            
-            if(href[g].contains(".")){
-                
-                web = href[g];
-                break;
-                
-            }//if(href[g].contains("."))
-            
-        }//for(int g = href.length-1; g >= 0; g--)
-        
-        String location_href[] = web.split(".");
-        
-        for(String t : location_href){
-            
-            if(!t.contains("www")){
-                
-                p_title = t;
-                break;
-                
-            }//if(!t.contains("www"))
-            
-        }//for(String t : location_href)
-        
-        String txt = "<p class=\"texto\" title=\"";
-        txt += p_title;
-        txt = "\"><a href=\"";
+        String txt = "<p class=\"texto\">[<a href=\"";
         txt += link;
         txt += "\" target=\"_blank\">";
         
@@ -303,7 +271,7 @@ public class Exportar {
             
         }
         
-        txt += "</a></p>";
+        txt += "</a>]</p>";
         
         
         return txt;
@@ -322,9 +290,16 @@ public class Exportar {
         
         select_title = name;
         
-        if(name.contains(" ")){
+        if(name.contains(" ") && name.length() >= 10){
             
             select_title = new Data().DataAbreviada(false);
+            
+        } else if(name.length() >= 50){
+            
+            select_title = "(";
+            select_title += new Data().DataAbreviada(false);
+            select_title += ") ";
+            select_title += name;
             
         } else {
             
@@ -343,31 +318,32 @@ public class Exportar {
         if(cd){
             
             doc.add("   a:link{");
-            doc.add("      color: inherit;");
+            doc.add("      color: black;");
             doc.add("      text-decoration: overline;");
-            doc.add("      text-decoration-color: rgb(0,0,0);");
+            doc.add("      text-decoration-color: rgb(100,100,100);");
             doc.add("   }");
             
             doc.add("   ");
             
             doc.add("   a:hover{");
-            doc.add("     color: inherit;");
-            doc.add("     text-decoration: overline;");
-            doc.add("     text-decoration-color: rgb(100,100,100);");
+            doc.add("      color: black;");
+            doc.add("      text-decoration: undeline;");
+            doc.add("      text-decoration-color: rgb(100,100,100);");
             doc.add("   }");
             
             doc.add("   ");
             
             doc.add("   a:active{");
-            doc.add("      color: inherit;");
-            doc.add("      text-decoration: none;");
+            doc.add("      color: black;");
+            doc.add("      text-decoration: overline;");
+            doc.add("      text-decoration-color: rgb(100,100,100);");
             doc.add("   }");
             
             doc.add("   ");
             
             doc.add("   a:visited{");
-            doc.add("      color: inherit;");
-            doc.add("      text-decoration: overline;");
+            doc.add("      color: black;");
+            doc.add("      text-decoration: undeline;");
             doc.add("      text-decoration-color: rgb(100,100,100);");
             doc.add("   }");
             
