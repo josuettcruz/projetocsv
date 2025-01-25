@@ -25,6 +25,7 @@ public class Exportar {
         this.host = sent;
         
         this.tag = false;
+        this.meta = false;
         
     }//Exportar(csv code, String sent)
     
