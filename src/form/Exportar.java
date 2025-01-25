@@ -193,15 +193,27 @@ public class Exportar {
     }//T(String dig)
     ** 13:36 24/01/2025 */
     
+    private String Tag(String dig){
+        
+        /* 08:30 25/01/2025 **
+        ** Em curso */
+        
+        String txt = "";
+        
+        txt += dig.replaceAll("<", "{").replaceAll(">", "}");
+        
+        return txt;
+        
+    }
+    
     private String T(String text){
         
         String txt = "";
         
-        final String br = "<br/>";
-        
-        boolean meta = false;
-        boolean use = false;
-        boolean val = false;
+        //boolean meta = false;
+        //boolean use = false;
+        //boolean val = false;
+        int col = 0;
         
         String live_text[] = text.split(" ");
         
@@ -219,8 +231,6 @@ public class Exportar {
             
             Data d = new Data(tx);
             
-            boolean no_use_br = true;
-            
             boolean into_1 = tx.charAt(0) == '(';
             boolean into_2 = tx.charAt(0) == '[';
             boolean into_3 = tx.charAt(0) == '{';
@@ -228,89 +238,88 @@ public class Exportar {
             
             int ended = tx.length() > 1 ? tx.length()-1 : 0;
             
-            boolean end_1 = tx.charAt(ended) == '(';
-            boolean end_2 = tx.charAt(ended) == '[';
-            boolean end_3 = tx.charAt(ended) == '{';
+            boolean end_1 = tx.charAt(ended) == ')';
+            boolean end_2 = tx.charAt(ended) == ']';
+            boolean end_3 = tx.charAt(ended) == '}';
             boolean end = end_1 || end_2 || end_3;
             
-            if(val){
-                txt += br;
-                no_use_br = false;
-            }
+            String node = "";
             
-            val = false;
-            
-            if(tx.contains("<")){//if
+            switch(col){
                 
-                this.tag = true;
-                
-                String lig[] = tx.split("<");
-                
-                if(!meta){
-                    txt += lig[0];
-                    txt += "<span>";
-                    if(lig.length >= 2){
-                        txt += lig[1];
-                    }
-                    meta = true;
+                case 1 ->{
+                    node = " ";
                 }
                 
-            } else if(tx.contains(">")){//if
-                
-                this.tag = true;
-                
-                String lig[] = tx.split(">");
-                
-                if(meta){
-                    txt += lig[0];
-                    txt += "</span>";
-                    if(lig.length >= 2){
-                        txt += lig[1];
-                    }
-                    meta = false;
+                case 2 ->{
+                    node = "<br/>";
                 }
+                
+            }//switch(col)
+            
+            if(tx.contains("<") || tx.contains(">")){//if
+                
+                col = 1;
+                
+                txt += node;
+                
+                txt += Tag(tx);
                 
             } else if(tx.equalsIgnoreCase("-") || tx.equalsIgnoreCase("|")){//if
                 
-                if(no_use_br){txt += br;}
+                txt += node;
                 
-            } else if(into){//if
-                
-                val = true;
-                
-                txt += tx;
+                col = 2;
                 
             } else if(d.Val()){//if
                 
-                val = true;
+                txt += node;
                 
-                if(no_use_br){txt += br;}
+                col = 2;
                 
                 txt += d.DataCompleta(true);
                 
-            } else if(end){
+            } else if(into){//if
                 
-                val = true;
+                txt += "<br/>";
                 
-                txt += tx;
-                
-            } else if(tx.length() == 1 && use){
-                
-                txt += " ";
-                txt += tx.toLowerCase();
-                
-            } else if(use){
-                
-                txt += " ";
-                txt += tx;
-                
-            } else {
+                col = 1;
                 
                 txt += tx;
                 
-            }
-            
-            use = true;
+            } else if(end){//if
+                
+                txt += node;
+                
+                col = 2;
+                
+                txt += tx;
+                
+            } else if(tx.length() == 1){//if
+                
+                txt += node;
+                
+                col = 1;
+                
+                if(col == 0){
+                    
+                    txt += tx.toLowerCase();
+                    
+                } else {//if(col == 0)
+                    
+                    txt += tx.toUpperCase();
+                    
+                }//if(col == 0)
+                
+            } else {//if
+                
+                txt += node;
+                
+                col = 1;
+                
+                txt += tx;
+                
+            }//if
             
         }//for(String tx : dig)
 
