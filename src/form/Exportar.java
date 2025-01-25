@@ -111,6 +111,7 @@ public class Exportar {
                     if(span){
                         
                         rew.add("</span>");
+                        span = false;
                         
                     } else {//if(span)
                         
@@ -290,7 +291,7 @@ public class Exportar {
                 
             } else if(d.Val()){//if
                 
-                txt += node;
+                if(col > 0){txt += "<br/>";}
                 
                 col = 2;
                 
@@ -369,15 +370,11 @@ public class Exportar {
     
     private String P(String paragraphy, String link){
         
-        String txt = "<p class=\"texto\">[<a href=\"";
+        String txt = "<p class=\"texto\"><a href=\"";
         txt += link;
         txt += "\" target=\"_blank\">";
         
-        cod lm = new cod();
-        
-        Data d = new Data();
-        
-        boolean datado = lm.Date(paragraphy).isBlank();
+        Data d = new Data(paragraphy);
         
         if(d.Val()){
             
@@ -389,7 +386,7 @@ public class Exportar {
             
         }
         
-        txt += "</a>]</p>";
+        txt += "</a></p>";
         
         
         return txt;
@@ -397,6 +394,8 @@ public class Exportar {
     }//P(String paragraphy, String link)
     
     public void Export(String name){
+        
+        final int max_char_title = 50;
         
         cod c = new cod();
         
@@ -408,11 +407,11 @@ public class Exportar {
         
         select_title = name;
         
-        if(name.contains(" ") && name.length() >= 10){
+        if(name.contains(" ") && name.length() >= max_char_title){
             
             select_title = new Data().DataAbreviada(false);
             
-        } else if(name.length() >= 50){
+        } else if(name.length() >= max_char_title){
             
             select_title = "(";
             select_title += new Data().DataAbreviada(false);

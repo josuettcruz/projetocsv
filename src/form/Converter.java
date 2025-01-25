@@ -5,7 +5,7 @@
 package form;
 
 import file.csv;
-import java.time.LocalDate;
+import model.Data;
 
 /**
  *
@@ -36,168 +36,15 @@ public class Converter extends javax.swing.JFrame {
         
         if(tentar){
             
-            System.out.println(tct);
-            System.exit(0);
-            
-        } else {
-            
-            dispose();
-            Index into = new Index();
-            into.Enter(tct);
+            System.out.println("Hoje é: " + new Data().DataCompleta(true));
+            System.out.println();
             
         }
+        
+        System.out.println(tct);
+        System.exit(0);
         
     }//Exc(boolean tentar, String tct)
-    
-    private String Date(String name){
-        
-        LocalDate tara = LocalDate.now();
-        
-        int a = tara.getYear();
-        int m = tara.getMonthValue();
-        int d = tara.getDayOfMonth();
-        int s = tara.getDayOfWeek().getValue();
-        
-        String title = "";
-        
-        if(d < 10){
-            title += "0";
-        }
-            
-        title += d;
-        
-        title += " de ";
-        
-        switch(m){
-            
-            case 1 ->{
-                title += "Janeiro";
-            }
-            
-            case 2 ->{
-                title += "Fevereiro";
-            }
-            
-            case 3 ->{
-                title += "Março";
-            }
-            
-            case 4 ->{
-                title += "Abril";
-            }
-            
-            case 5 ->{
-                title += "Maio";
-            }
-            
-            case 6 ->{
-                title += "Junho";
-            }
-            
-            case 7 ->{
-                title += "Julho";
-            }
-            
-            case 8 ->{
-                title += "Agosto";
-            }
-            
-            case 9 ->{
-                title += "Setembro";
-            }
-            
-            case 10 ->{
-                title += "Outubro";
-            }
-            
-            case 11 ->{
-                title += "Novembo";
-            }
-            
-            case 12 ->{
-                title += "Dezembro";
-            }
-            
-        }//switch(m)
-        
-        title += " de ";
-        title += a;
-        title += " - ";
-        
-        switch(s){
-            
-            case 1 ->{
-                title += "Segunda";
-            }
-            
-            case 2 ->{
-                title += "Terça";
-            }
-            
-            case 3 ->{
-                title += "Quarta";
-            }
-            
-            case 4 ->{
-                title += "Quinta";
-            }
-            
-            case 5 ->{
-                title += "Sexta";
-            }
-            
-            case 6 ->{
-                title += "Sáb";
-            }
-            
-            case 7 ->{
-                title += "DOM";
-            }
-            
-        }//switch(tara.getDayOfWeek().getValue())
-        
-        if(s < 6){
-            title += "-feira";
-        }
-        
-        title += " - \"";
-        title += name;
-        title += "\"";
-        
-        return title;
-        
-    }//Date(String name)
-    
-    /*private String Date(){
-        
-        LocalDate tara = LocalDate.now();
-        
-        int a = tara.getYear();
-        int m = tara.getMonthValue();
-        int d = tara.getDayOfMonth();
-        
-        String title = "";
-        
-        if(d < 10){
-            title += "0";
-        }
-            
-        title += d;
-        
-        title += "/";
-        
-        if(m < 10){
-            title += "0";
-        }
-        
-        title += m;
-        
-        title += "/";
-        title += a;
-        
-        return title;
-        
-    }/*Date()*/
     
     private void Exportar(String diretory, String folder, String file){
         

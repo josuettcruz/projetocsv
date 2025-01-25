@@ -16,6 +16,10 @@ public class Hora {
     private LocalTime hora;
     private String error;
     
+    public Hora(){
+        this.hora = LocalTime.now();
+    }
+    
     public Hora(LocalTime hora){
         this.hora = hora;
     }
