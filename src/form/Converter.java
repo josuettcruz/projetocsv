@@ -168,7 +168,7 @@ public class Converter extends javax.swing.JFrame {
         
     }//Date(String name)
     
-    private String Date(){
+    /*private String Date(){
         
         LocalDate tara = LocalDate.now();
         
@@ -197,7 +197,7 @@ public class Converter extends javax.swing.JFrame {
         
         return title;
         
-    }//Date()
+    }/*Date()*/
     
     private void Exportar(String diretory, String folder, String file){
         
@@ -205,7 +205,7 @@ public class Converter extends javax.swing.JFrame {
         
         Exportar mht = new Exportar(cmd, folder);
         
-        mht.Export(Date(),Date(file.substring(0,file.lastIndexOf("."))),file.substring(0,file.lastIndexOf(".")));
+        mht.Export(file.substring(0,file.lastIndexOf(".")));
         
     }
     

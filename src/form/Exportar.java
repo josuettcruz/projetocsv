@@ -16,6 +16,7 @@ public class Exportar {
     private String host;
     
     private boolean tag;
+    private boolean meta;
     
     public Exportar(csv code, String sent){
         
@@ -25,7 +26,7 @@ public class Exportar {
         
         this.tag = false;
         
-    }
+    }//Exportar(csv code, String sent)
     
     private String Number(int numb){
         
@@ -49,170 +50,66 @@ public class Exportar {
         
         return txt;
         
-    }
-    
-    /* 13:36 24/01/2025 **
-    private String T(String text){
-        
-        String dig = text.replace(" | ", "\\");
-        
-        String txt = "";
-        
-        boolean place = false;
-        
-        boolean aspas = true;
-        
-        boolean letter = true;
-        
-        boolean metatag = false;
-        
-        for(int i = 0; i < dig.length(); i++){
-            
-            char ds = dig.charAt(i);
-            
-            switch(ds){
-                
-                case ')':
-                case '}':
-                case ']':
-                case '!':
-                case '?':
-                case '.':
-                txt += ds;
-                place = true;
-                if(!metatag){letter = true;}
-                break;
-                
-                case '\"':
-                    
-                    if(metatag){
-                        txt += "\"";
-                    }
-                    
-                    if(letter){
-                        
-                        if(aspas){
-                            
-                            txt += "<q>";
-                            aspas = false;
-                            
-                        } else {
-                            
-                            txt += "</q>";
-                            aspas = true;
-                            
-                        }
-                        
-                    }
-                    
-                    letter = false;
-                    
-                break;
-                
-                case '<':
-                this.tag = true;
-                if(!metatag){
-                    txt += "<span>";
-                    place = false;
-                    letter = true;
-                    metatag = true;
-                }
-                letter = false;
-                break;
-                
-                case '>':
-                if(metatag){
-                    txt += "</span>";
-                    place = false;
-                    letter = true;
-                    metatag = false;
-                }
-                letter = true;
-                break;
-                
-                case ' ':
-                    
-                    if(i == 0){
-                        
-                        txt += "-";
-                        place = false;
-                        
-                    } else if(i == dig.length()-1){
-                        
-                        txt += ".";
-                        place = false;
-                        
-                    } else if(place){
-                        
-                        txt += "<br/>";
-                        place = false;
-                        
-                    } else {
-                        
-                        txt += " ";
-                        
-                    }
-                    
-                break;
-                
-                case '\\':
-                txt += "<br/>";
-                place = false;
-                if(!metatag){letter = true;}
-                break;
-                
-                default:
-                if(i == 0 && dig.contains(" ")){
-                    String done = ds + "";
-                    txt += done.toUpperCase();
-                } else {
-                    txt += ds;
-                }
-                place = false;
-                if(!metatag){letter = true;}
-                break;
-                
-            }
-
-        }
-        
-        if(!aspas){
-            
-            txt += "</q>";
-            
-        }
-        
-        if(metatag){
-            
-            txt += "</span>";
-            
-        }
-
-        return txt;
-
-    }//T(String dig)
-    ** 13:36 24/01/2025 */
+    }//Number(int numb)
     
     private String Tag(String dig){
         
-        /* 08:30 25/01/2025 **
-        ** Em curso */
-        
         String txt = "";
         
-        txt += dig.replaceAll("<", "{").replaceAll(">", "}");
+        for(int x = 0; x < dig.length(); x++){
+            
+            char ds = dig.charAt(x);
+            
+            switch(ds){
+                
+                case'<' ->{
+                    
+                    if(this.meta){
+                        
+                        txt += "<";
+                        
+                    } else {
+                        
+                        txt += "<span>";
+                        this.meta = true;
+                        
+                    }
+                    
+                }//case'<'
+                
+                case'>' ->{
+                    
+                    if(this.meta){
+                        
+                        txt += "</span>";
+                        this.meta = false;
+                        
+                    } else {
+                        
+                        txt += ">";
+                        
+                    }
+                    
+                }//case'>'
+                
+                default ->{
+                    
+                    txt += ds;
+                    
+                }//default
+                
+            }//switch(ds)
+            
+        }//for(int x = 0; x < dig.length(); x++)
         
         return txt;
         
-    }
+    }//Tag(String dig)
     
     private String T(String text){
         
         String txt = "";
         
-        //boolean meta = false;
-        //boolean use = false;
-        //boolean val = false;
         int col = 0;
         
         String live_text[] = text.split(" ");
@@ -258,6 +155,8 @@ public class Exportar {
             }//switch(col)
             
             if(tx.contains("<") || tx.contains(">")){//if
+                
+                this.tag = true;
                 
                 col = 1;
                 
@@ -322,6 +221,13 @@ public class Exportar {
             }//if
             
         }//for(String tx : dig)
+        
+        if(this.meta){
+            
+            txt += "</span>";
+            this.meta = false;
+            
+        }//if(this.meta)
 
         return txt;
 
@@ -329,13 +235,11 @@ public class Exportar {
     
     private String P(String paragraphy){
         
-        cod p = new cod();
+        Data d = new Data(paragraphy);
         
-        boolean data = p.Date(paragraphy).isBlank();
-        
-        if(data){
+        if(d.Val()){
             
-            return "<p class=\"texto\">" + p.Date() + "</p>";
+            return "<p class=\"texto\">" + d.DataCompleta(true) + "</p>";
             
         } else {
         
@@ -347,17 +251,51 @@ public class Exportar {
     
     private String P(String paragraphy, String link){
         
-        String txt = "<p class=\"texto\"><a href=\"";
+        String href[] = link.split("/");
+        
+        String web = "www.web.com";
+        
+        String p_title = "HIPERLINK";
+        
+        for(int g = href.length-1; g >= 0; g--){
+            
+            if(href[g].contains(".")){
+                
+                web = href[g];
+                break;
+                
+            }//if(href[g].contains("."))
+            
+        }//for(int g = href.length-1; g >= 0; g--)
+        
+        String location_href[] = web.split(".");
+        
+        for(String t : location_href){
+            
+            if(!t.contains("www")){
+                
+                p_title = t;
+                break;
+                
+            }//if(!t.contains("www"))
+            
+        }//for(String t : location_href)
+        
+        String txt = "<p class=\"texto\" title=\"";
+        txt += p_title;
+        txt = "\"><a href=\"";
         txt += link;
         txt += "\" target=\"_blank\">";
         
         cod lm = new cod();
         
+        Data d = new Data();
+        
         boolean datado = lm.Date(paragraphy).isBlank();
         
-        if(datado){
+        if(d.Val()){
             
-            txt += lm.Date();
+            txt += d.DataCompleta(true);
             
         } else {
             
@@ -372,7 +310,7 @@ public class Exportar {
         
     }//P(String paragraphy, String link)
     
-    public void Export(String title,String footer, String find){
+    public void Export(String name){
         
         cod c = new cod();
         
@@ -382,10 +320,16 @@ public class Exportar {
         
         String select_title;
         
-        if(find.length() <= 20 && !find.contains(" ")){
-            select_title = find;
+        select_title = name;
+        
+        if(name.contains(" ")){
+            
+            select_title = new Data().DataAbreviada(false);
+            
         } else {
-            select_title = title;
+            
+            select_title = name;
+            
         }
         
         doc.add("<html>");
@@ -570,9 +514,9 @@ public class Exportar {
                 doc.add("   for(var i = 0; i < metatag.length; i++){");
                 doc.add("      ");
                 doc.add("      metatag[i].innerText = \"<\" + metatag[i].innerHTML + \">\";");
-                doc.add("      metatag[i].style.fontWeight = \"normal\";");
-                doc.add("      metatag[i].style.fontFamily = \"Arial Narrow\";");
-                doc.add("      metatag[i].style.letterSpacing = \"1%\";");
+                //doc.add("      metatag[i].style.fontWeight = \"normal\";");
+                //doc.add("      metatag[i].style.fontFamily = \"Arial Narrow\";");
+                //doc.add("      metatag[i].style.letterSpacing = \"1%\";");
                 doc.add("      ");
                 doc.add("   }");
                 doc.add("   ");
@@ -582,7 +526,7 @@ public class Exportar {
             
         } else {//if(cd) - 1
             
-            doc.add("<div class=\"txt\">" + find + "</div>");
+            doc.add("<div class=\"txt\">" + name + "</div>");
             
         }//if(cd) - 1
         
@@ -594,7 +538,7 @@ public class Exportar {
             
             doc.add("");
             
-            doc.add("<!-- " + footer + " --");
+            doc.add("<!-- " + name + " --");
             
             for(int x = 0; x < this.code.Tot(); x++){
                 
