@@ -55,6 +55,8 @@ public class Exportar {
     
     private String phrase(String dig, int note){
         
+        boolean space = true;
+        
         String txt = "";
         
         for(int t = 0; t < dig.length(); t++){
@@ -64,17 +66,24 @@ public class Exportar {
             switch(ds){
                 
                 case'\\' ->{
+                    
                     if(this.meta){
+                        
                         txt += "\\";
-                    } else if(note == 0){
-                        txt += "";
-                    } else {
+                        
+                    } else if(space && note > 0){//if(this.meta)
+                        
                         txt += "<br/>";
-                    }
-                }
+                        
+                        space = false;
+                        
+                    }//if(this.meta)
+                    
+                }//case'\\'
                 
                 default ->{
                     txt += ds;
+                    space = true;
                 }
                 
             }//switch(ds)
@@ -85,9 +94,61 @@ public class Exportar {
         
     }//phrase(String dig)
     
-    private String Tag(String dig){
+    private String Reverse(String text){
+        
+        boolean span = true;
+        
+        List<String> rew = new ArrayList<>();
+        
+        for(int r = text.length()-1; r >= 0; r--){
+            
+            char ds = text.charAt(r);
+            
+            switch(ds){
+                
+                case'>' ->{
+                    
+                    if(span){
+                        
+                        rew.add("</span>");
+                        
+                    } else {//if(span)
+                        
+                        rew.add(">");
+                        
+                    }//if(span)
+                    
+                }//case'>'
+                
+                default ->{
+                    
+                    rew.add(ds + "");
+                    
+                }//default
+                
+            }//switch(ds)
+            
+        }//for(int r = text.length()-1; r >= 0; r--)
         
         String txt = "";
+        
+        for(int letter = rew.size()-1; letter >= 0; letter--){
+            
+            txt += rew.get(letter);
+            
+        }//for(int letter = rew.size()-1; letter >= 0; letter--)
+        
+        return txt;
+        
+    }//Reverse(String text)
+    
+    private String Tag(String dig, int note){
+        
+        boolean space = true;
+        boolean reverse = false;
+        
+        String txt = "";
+        String node = "";
         
         for(int x = 0; x < dig.length(); x++){
             
@@ -100,10 +161,12 @@ public class Exportar {
                     if(this.meta){
                         
                         txt += "<";
+                        node += "<";
                         
                     } else {
                         
                         txt += "<span>";
+                        node += "<span>";
                         this.meta = true;
                         
                     }
@@ -112,22 +175,44 @@ public class Exportar {
                 
                 case'>' ->{
                     
+                    node += ">";
+                    
                     if(this.meta){
                         
                         txt += "</span>";
+                        
                         this.meta = false;
                         
                     } else {
                         
-                        txt += ">";
+                        reverse = true;
                         
                     }
                     
                 }//case'>'
                 
+                case'\\' ->{
+                    
+                    if(this.meta){
+                        
+                        txt += "\\";
+                        node += "\\";
+                        
+                    } else if(space && note > 0){//if(this.meta)
+                        
+                        txt += "<br/>";
+                        node += "<br/>";
+                        
+                        space = false;
+                        
+                    }//if(this.meta)
+                    
+                }//case'\\'
+                
                 default ->{
                     
                     txt += ds;
+                    node += ds;
                     
                 }//default
                 
@@ -135,7 +220,7 @@ public class Exportar {
             
         }//for(int x = 0; x < dig.length(); x++)
         
-        return txt;
+        return reverse ? Reverse(node) : txt;
         
     }//Tag(String dig)
     
@@ -195,11 +280,11 @@ public class Exportar {
                 
                 txt += node;
                 
-                txt += Tag(tx);
+                txt += Tag(tx, col);
                 
             } else if(tx.equalsIgnoreCase("-") || tx.equalsIgnoreCase("|")){//if
                 
-                txt += node;
+                //txt += node;
                 
                 col = 2;
                 
@@ -213,7 +298,7 @@ public class Exportar {
                 
             } else if(into){//if
                 
-                txt += "<br/>";
+                if(col > 0){txt += "<br/>";}
                 
                 col = 1;
                 
