@@ -476,7 +476,7 @@ public class Hora {
                 txt += "s";
             }
 
-            if(mt == 0){
+            if(mt > 0){
                 txt += " e ";
             }
 

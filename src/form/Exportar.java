@@ -8,6 +8,8 @@ import file.*;
 import java.util.ArrayList;
 import java.util.List;
 import model.Data;
+import model.Hora;
+import model.Registro;
 
 public class Exportar {
     
@@ -17,6 +19,7 @@ public class Exportar {
     
     private boolean tag;
     private boolean meta;
+    private boolean aspas;
     
     public Exportar(csv code, String sent){
         
@@ -26,6 +29,7 @@ public class Exportar {
         
         this.tag = false;
         this.meta = false;
+        this.aspas = false;
         
     }//Exportar(csv code, String sent)
     
@@ -78,6 +82,18 @@ public class Exportar {
                         space = false;
                         
                     }//if(this.meta)
+                    
+                }//case'\\'
+                
+                case'\"' ->{
+                    
+                    if(this.aspas){
+                        txt += "</q>";
+                        this.aspas = false;
+                    } else {
+                        txt += "<q>";
+                        this.aspas = true;
+                    }
                     
                 }//case'\\'
                 
@@ -344,6 +360,13 @@ public class Exportar {
         if(this.meta){
             
             txt += "</span>";
+            this.meta = false;
+            
+        }//if(this.meta)
+        
+        if(this.aspas){
+            
+            txt += "</q>";
             this.meta = false;
             
         }//if(this.meta)
@@ -630,8 +653,116 @@ public class Exportar {
         if(cd){//if(cd) - 2
             
             doc.add("");
+            doc.add("");
             
             doc.add("<!-- " + name + " --");
+            
+            for(int p = 0; p < this.code.Tot(); p++){
+                
+                doc.add("");
+                
+                String pos = "Item ";
+                
+                if(p < 10){pos += "0";}
+                
+                if(p < 100 && this.code.Tot() > 100){pos += "0";}
+                
+                if(p < 1000 && this.code.Tot() > 1000){pos += "0";}
+                
+                if(p < 10000 && this.code.Tot() > 10000){pos += "0";}
+                
+                pos += p;
+                
+                pos += " de ";
+                
+                if(this.code.Tot() < 10){pos += "0";}
+                
+                pos += this.code.Tot();
+                
+                doc.add("_".repeat(pos.length()));
+                
+                doc.add(pos);
+                
+                doc.add("");
+                
+                for(int l = 0; l < this.code.Tot(p); l++){
+                    
+                    doc.add(this.code.Read(p, l));
+                    
+                }//for(int l = 0; l < this.code.Tot(p); l++)
+                
+            }//for(int p = 0; p < this.code.Tot(); p++)
+            
+            doc.add("");
+            doc.add("");
+            
+            doc.add("-- " + 
+                    new Data().DataAbreviada(false) + 
+                    " -- " + 
+                    new Hora(true).getHora(true) + 
+                    " --"
+            );
+            
+            doc.add("");
+            
+            String total = "ITE";
+            
+            if(this.code.Tot() == 1){
+                total += "M";
+            } else {
+                total += "NS";
+            }
+            
+            String itens = "";
+            
+            for(int d = 0; d < this.code.Tot(); d++){
+                
+                itens += ";";
+                
+                if(d < 10){
+                    itens += "0";
+                }
+                
+                if(d < 100 && this.code.Tot() > 100){
+                    itens += "0";
+                }
+                
+                if(d < 1000 && this.code.Tot() > 1000){
+                    itens += "0";
+                }
+                
+                if(d < 10000 && this.code.Tot() > 10000){
+                    itens += "0";
+                }
+                
+                itens += d;
+                
+                itens += " --- ";
+                
+                if(this.code.Tot() < 10){itens += "0";}
+                
+                itens += this.code.Tot();
+                
+                itens += " | ";
+                
+                itens += Registro.Select(this.code.Read(d, 0), 15);
+                
+                
+            }//for(int d = 0; d < this.code.Tot(); d++)
+            
+            doc.add("Arquivo: \"" + 
+                    name + 
+                    "\";" + 
+                    new Data().Load() + 
+                    ";" + 
+                    new Hora(true).getNodeHora(false) + 
+                    ";" + 
+                    this.code.Tot() + 
+                    " " + 
+                    total + 
+                    "!" + 
+                    itens
+            );
             
             for(int x = 0; x < this.code.Tot(); x++){
                 
@@ -650,6 +781,9 @@ public class Exportar {
                 doc.add(tx);
                 
             }//for(int x = 0; x < this.code.Tot(); x++)
+            
+            doc.add("");
+            doc.add("");
             
         }//if(cd) - 2
         
