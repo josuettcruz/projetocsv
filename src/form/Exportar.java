@@ -657,7 +657,7 @@ public class Exportar {
             
             doc.add("<!-- " + name + " --");
             
-            for(int p = 0; p < this.code.Tot(); p++){
+            for(int p = 1; p <= this.code.Tot(); p++){
                 
                 doc.add("");
                 
@@ -687,7 +687,11 @@ public class Exportar {
                 
                 for(int l = 0; l < this.code.Tot(p); l++){
                     
-                    doc.add(this.code.Read(p, l));
+                    if(!this.code.Read((p-1), l).isBlank()){
+                        
+                        doc.add(this.code.Read((p-1), l));
+                        
+                    }
                     
                 }//for(int l = 0; l < this.code.Tot(p); l++)
                 
@@ -715,7 +719,7 @@ public class Exportar {
             
             String itens = "";
             
-            for(int d = 0; d < this.code.Tot(); d++){
+            for(int d = 1; d <= this.code.Tot(); d++){
                 
                 itens += ";";
                 
@@ -745,7 +749,7 @@ public class Exportar {
                 
                 itens += " | ";
                 
-                itens += Registro.Select(this.code.Read(d, 0), 15);
+                itens += Registro.Select(this.code.Read(d-1, 0), 15);
                 
                 
             }//for(int d = 0; d < this.code.Tot(); d++)
