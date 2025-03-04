@@ -71,7 +71,7 @@ public class Exportar {
                 
                 case'\\' ->{
                     
-                    if(this.meta){
+                    if(this.tag){
                         
                         txt += "\\";
                         
@@ -210,7 +210,7 @@ public class Exportar {
                 
                 case'\\' ->{
                     
-                    if(this.meta){
+                    if(this.tag){
                         
                         txt += "\\";
                         node += "\\";
@@ -313,6 +313,14 @@ public class Exportar {
                 
                 txt += d.DataCompleta(true);
                 
+            } else if(into && end){//if
+                
+                if(col > 0){txt += "<br/>";}
+                
+                col = 2;
+                
+                txt += phrase(tx, col);
+                
             } else if(into){//if
                 
                 if(col > 0){txt += "<br/>";}
@@ -329,7 +337,7 @@ public class Exportar {
                 
                 txt += phrase(tx, col);
                 
-            } else if(tx.length() == 1){//if
+            } else /*if(tx.length() == 1){//if
                 
                 txt += node;
                 
@@ -345,7 +353,7 @@ public class Exportar {
                     
                 }//if(col == 0)
                 
-            } else {//if
+            } else */{
                 
                 txt += node;
                 
@@ -685,13 +693,9 @@ public class Exportar {
                 
                 doc.add("");
                 
-                for(int l = 0; l < this.code.Tot(p); l++){
+                for(int l = 0; l < this.code.Tot(p-1); l++){
                     
-                    if(!this.code.Read((p-1), l).isBlank()){
-                        
-                        doc.add(this.code.Read((p-1), l));
-                        
-                    }
+                    doc.add(this.code.Read((p-1), l));
                     
                 }//for(int l = 0; l < this.code.Tot(p); l++)
                 
@@ -749,22 +753,19 @@ public class Exportar {
                 
                 itens += " | ";
                 
-                itens += Registro.Select(this.code.Read(d-1, 0), 15);
+                itens += this.code.Read(d-1, 0);
                 
                 
             }//for(int d = 0; d < this.code.Tot(); d++)
             
-            doc.add("Arquivo: \"" + 
-                    name + 
-                    "\";" + 
-                    new Data().Load() + 
-                    ";" + 
-                    new Hora(true).getNodeHora(false) + 
-                    ";" + 
-                    this.code.Tot() + 
+            doc.add(this.code.Tot() + 
                     " " + 
                     total + 
-                    "!" + 
+                    ";" + 
+                    "Arquivo: \"" + 
+                    name + 
+                    ".csv\";" + 
+                    new Data().Load() + 
                     itens
             );
             
@@ -786,18 +787,13 @@ public class Exportar {
                 
             }//for(int x = 0; x < this.code.Tot(); x++)
             
-            doc.add("");
-            doc.add("");
-            
         }//if(cd) - 2
         
-        cod cod = new cod();
-        
         Files line_page = new Files(this.host + 
-                "Export_" +
-                cod.Date(false) + 
+                "page_" +
+                new Data().Load() + 
                 "_" + 
-                cod.Time(false) + 
+                new Hora(true).Load() + 
                 ".htm");
         
         line_page.Clear();
