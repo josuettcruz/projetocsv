@@ -57,59 +57,6 @@ public class Exportar {
         
     }//Number(int numb)
     
-    private String phrase(String dig, int note){
-        
-        boolean space = true;
-        
-        String txt = "";
-        
-        for(int t = 0; t < dig.length(); t++){
-            
-            char ds = dig.charAt(t);
-            
-            switch(ds){
-                
-                case'\\' ->{
-                    
-                    if(this.tag){
-                        
-                        txt += "\\";
-                        
-                    } else if(space && note > 0){//if(this.meta)
-                        
-                        txt += "<br/>";
-                        
-                        space = false;
-                        
-                    }//if(this.meta)
-                    
-                }//case'\\'
-                
-                case'\"' ->{
-                    
-                    if(this.aspas){
-                        txt += "</q>";
-                        this.aspas = false;
-                    } else {
-                        txt += "<q>";
-                        this.aspas = true;
-                    }
-                    
-                }//case'\\'
-                
-                default ->{
-                    txt += ds;
-                    space = true;
-                }
-                
-            }//switch(ds)
-            
-        }//for(int t = 0; t < dig.length(); t++)
-        
-        return txt;
-        
-    }//phrase(String dig)
-    
     private String Reverse(String text){
         
         boolean span = true;
@@ -241,6 +188,59 @@ public class Exportar {
         
     }//Tag(String dig)
     
+    private String phrase(String dig, int note){
+        
+        boolean space = true;
+        
+        String txt = "";
+        
+        for(int t = 0; t < dig.length(); t++){
+            
+            char ds = dig.charAt(t);
+            
+            switch(ds){
+                
+                case'\\' ->{
+                    
+                    if(this.tag){
+                        
+                        txt += "\\";
+                        
+                    } else if(space && note > 0){//if(this.meta)
+                        
+                        txt += "<br/>";
+                        
+                        space = false;
+                        
+                    }//if(this.meta)
+                    
+                }//case'\\'
+                
+                case'\"' ->{
+                    
+                    if(this.aspas){
+                        txt += "</q>";
+                        this.aspas = false;
+                    } else {
+                        txt += "<q>";
+                        this.aspas = true;
+                    }
+                    
+                }//case'\\'
+                
+                default ->{
+                    txt += ds;
+                    space = true;
+                }
+                
+            }//switch(ds)
+            
+        }//for(int t = 0; t < dig.length(); t++)
+        
+        return txt;
+        
+    }//phrase(String dig)
+    
     private String T(String text){
         
         String txt = "";
@@ -268,7 +268,7 @@ public class Exportar {
             boolean into_3 = tx.charAt(0) == '{';
             boolean into = into_1 || into_2 || into_3;
             
-            int ended = tx.length() > 1 ? tx.length()-1 : 0;
+            int ended = tx.replaceAll("\"","").length() > 1 ? tx.length()-1 : 0;
             
             boolean end_1 = tx.charAt(ended) == ')';
             boolean end_2 = tx.charAt(ended) == ']';
@@ -287,6 +287,10 @@ public class Exportar {
                     node = "<br/>";
                 }
                 
+                case 3 ->{
+                    node = " - ";
+                }
+                
             }//switch(col)
             
             if(tx.contains("<") || tx.contains(">")){//if
@@ -299,11 +303,13 @@ public class Exportar {
                 
                 txt += Tag(tx, col);
                 
-            } else if(tx.equalsIgnoreCase("-") || tx.equalsIgnoreCase("|")){//if
-                
-                //txt += node;
+            } else if(tx.equalsIgnoreCase("|")){//if
                 
                 col = 2;
+                
+            } else if(tx.equalsIgnoreCase("-")){//if
+                
+                col = 3;
                 
             } else if(d.Val()){//if
                 
@@ -337,23 +343,23 @@ public class Exportar {
                 
                 txt += phrase(tx, col);
                 
-            } else /*if(tx.length() == 1){//if
+            } else if(tx.length() == 1){//if
                 
                 txt += node;
                 
-                col = 1;
-                
                 if(col == 0){
-                    
-                    txt += tx.toLowerCase();
-                    
-                } else {//if(col == 0)
                     
                     txt += tx.toUpperCase();
                     
+                } else {//if(col == 0)
+                    
+                    txt += tx.toLowerCase();
+                    
                 }//if(col == 0)
                 
-            } else */{
+                col = 1;
+                
+            } else {
                 
                 txt += node;
                 
@@ -426,7 +432,7 @@ public class Exportar {
     
     public void Export(String name){
         
-        final int max_char_title = 50;
+        final int max_char_title = 80;
         
         cod c = new cod();
         
@@ -471,15 +477,11 @@ public class Exportar {
             doc.add("      text-decoration-color: rgb(100,100,100);");
             doc.add("   }");
             
-            doc.add("   ");
-            
             doc.add("   a:hover{");
             doc.add("      color: black;");
-            doc.add("      text-decoration: undeline;");
+            doc.add("      text-decoration: underline;");
             doc.add("      text-decoration-color: rgb(100,100,100);");
             doc.add("   }");
-            
-            doc.add("   ");
             
             doc.add("   a:active{");
             doc.add("      color: black;");
@@ -487,15 +489,11 @@ public class Exportar {
             doc.add("      text-decoration-color: rgb(100,100,100);");
             doc.add("   }");
             
-            doc.add("   ");
-            
             doc.add("   a:visited{");
             doc.add("      color: black;");
-            doc.add("      text-decoration: undeline;");
+            doc.add("      text-decoration: underline;");
             doc.add("      text-decoration-color: rgb(100,100,100);");
             doc.add("   }");
-            
-            doc.add("   ");
             
             doc.add("   div.txt{");
             doc.add("      margin-left:5%;");
@@ -507,8 +505,6 @@ public class Exportar {
             doc.add("      overflow-y:visible;");
             doc.add("   }");
             
-            doc.add("   ");
-            
             doc.add("   div.space{");
             doc.add("      width:100%;");
             doc.add("      height:2px;");
@@ -517,11 +513,9 @@ public class Exportar {
             
             doc.add("   h1.tema{");
             doc.add("      color:black;");
-            doc.add("      margin-left:2.5%;");
-            doc.add("      font-size:calc(10px + 2vw);");
+            doc.add("      margin-left:2%;");
+            doc.add("      font-size:calc(15px + 1vw);");
             doc.add("   }");
-            
-            doc.add("   ");
             
             doc.add("   p.texto{");
             doc.add("      color:black;");
@@ -534,15 +528,11 @@ public class Exportar {
             doc.add("      line-height:2em;");
             doc.add("   }");
             
-            doc.add("   ");
-            
             doc.add("   div.divide{");
             doc.add("      width:100%;");
             doc.add("      height:20px;");
             doc.add("      background-color:rgba(0, 0, 0, .01);");
             doc.add("   }");
-            
-            doc.add("   ");
             
             doc.add("   p.ended{");
             doc.add("      padding:50px;");
@@ -567,9 +557,7 @@ public class Exportar {
             
             for(int x = 0; x < this.code.Tot(); x++){
                 
-                String tx = "";
-                
-                tx += "<div class=\"txt\">";
+                String tx = "<div class=\"txt\">";
                 
                 for(int y = 0; y < this.code.Tot(x); y++){
                     
@@ -638,9 +626,9 @@ public class Exportar {
                 doc.add("   for(var i = 0; i < metatag.length; i++){");
                 doc.add("      ");
                 doc.add("      metatag[i].innerText = \"<\" + metatag[i].innerHTML + \">\";");
-                //doc.add("      metatag[i].style.fontWeight = \"normal\";");
-                //doc.add("      metatag[i].style.fontFamily = \"Arial Narrow\";");
-                //doc.add("      metatag[i].style.letterSpacing = \"1%\";");
+                doc.add("      metatag[i].style.fontWeight = \"normal\";");
+                doc.add("      metatag[i].style.fontFamily = \"Arial Narrow\";");
+                doc.add("      metatag[i].style.letterSpacing = \"1%\";");
                 doc.add("      ");
                 doc.add("   }");
                 doc.add("   ");
@@ -753,7 +741,7 @@ public class Exportar {
                 
                 itens += " | ";
                 
-                itens += this.code.Read(d-1, 0);
+                itens += Registro.Select(this.code.Read(d-1, 0),50);
                 
                 
             }//for(int d = 0; d < this.code.Tot(); d++)
