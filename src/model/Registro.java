@@ -339,4 +339,35 @@ public class Registro {
         
     }//Select(String text, int max)
     
+    public static String Select(String text){
+        
+        String txt = "";
+        
+        String phease[] = text.split(" ");
+        
+        boolean space = false;
+        
+        for(String p : phease){
+            
+            if(space){
+                
+                txt += " ";
+                space = false;
+            
+            }//if(space)
+            
+            if(!p.isBlank()){
+                
+                txt += space ? p.replaceAll("\t", "") : p.replaceAll("\t", " ");
+                space = true;
+                
+            }//if(!p.isBlank())
+            
+        }//for(String p : phease)
+        
+        return txt;
+        
+    }//Select(String text)
+        
+    
 }

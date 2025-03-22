@@ -10,7 +10,7 @@ package form;
  */
 public class Location {
     
-    public static int x = 200;
-    public static int y = 100;
+    public static int x = 550;
+    public static int y = 300;
     
-}
+}//Location

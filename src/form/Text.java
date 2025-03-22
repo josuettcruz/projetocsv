@@ -6,6 +6,7 @@ package form;
 
 import file.cod;
 import file.csv;
+import model.Registro;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -182,10 +183,10 @@ public class Text extends javax.swing.JFrame {
         novo.Enter(true);
     }
     
-    private void Err(){
+    /*private void Err(){
         System.out.println("Erro inesperado!");
         System.exit(0);
-    }
+    }*/
     
     private void Action(){
         
@@ -193,7 +194,7 @@ public class Text extends javax.swing.JFrame {
         
         String obs = txt.getText().trim();
         
-        connect.add(title.getText().trim());
+        connect.add(Registro.Select(title.getText().trim()));
         
         if(!obs.isBlank()){
             
@@ -205,7 +206,7 @@ public class Text extends javax.swing.JFrame {
                     
                     if(!op.isBlank()){
                         
-                        connect.add(op.trim().replaceAll("\t", ""));
+                        connect.add(Registro.Select(op));
                         
                     }//if(!op.isBlank())
                     
@@ -213,7 +214,7 @@ public class Text extends javax.swing.JFrame {
                 
             } else {//if(obs.contains("\n"))
                 
-                connect.add(obs.trim().replaceAll("\t", ""));
+                connect.add(Registro.Select(obs));
                 
             }//if(obs.contains("\n"))
             
@@ -512,9 +513,7 @@ public class Text extends javax.swing.JFrame {
             
             case 40 ->{
                 
-                if(!txt.getText().contains("\n")){
-                    txt.requestFocus();
-                }
+                txt.requestFocus();
                 
             }
             
@@ -526,12 +525,6 @@ public class Text extends javax.swing.JFrame {
         
         switch(evt.getKeyCode()){
             
-            case 9 ->{
-                
-                title.requestFocus();
-                
-            }//case 9
-            
             case 38 ->{
                 
                 if(!txt.getText().contains("\n")){
@@ -542,11 +535,7 @@ public class Text extends javax.swing.JFrame {
             
             case 12 ->{
                 
-                if(txt.getText().contains("\n")){
-                    title.requestFocus();
-                } else {
-                    Save();
-                }
+                title.requestFocus();
                 
             }//case 12
             

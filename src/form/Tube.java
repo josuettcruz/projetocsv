@@ -6,6 +6,7 @@ package form;
 
 import file.cod;
 import file.csv;
+import model.Registro;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -199,13 +200,13 @@ public class Tube extends javax.swing.JFrame {
         
         List<String> connect = new ArrayList();
         
-        String obs = txt.getText().trim();
+        String obs = txt.getText();
         
-        connect.add(title.getText().trim());
-        connect.add(vcr.getText().trim());
-        connect.add(lnk.getText().trim());
-        connect.add(vch.getText().trim());
-        connect.add(lch.getText().trim());
+        connect.add(Registro.Select(title.getText()));
+        connect.add(Registro.Select(vcr.getText()));
+        connect.add(lnk.getText());
+        connect.add(Registro.Select(vch.getText()));
+        connect.add(lch.getText());
         
         if(!obs.isBlank()){
             
@@ -217,7 +218,7 @@ public class Tube extends javax.swing.JFrame {
                     
                     if(!op.isBlank()){
                         
-                        connect.add(op.trim().replaceAll("\t", ""));
+                        connect.add(Registro.Select(op));
                         
                     }//if(!op.isBlank())
                     
@@ -863,11 +864,7 @@ public class Tube extends javax.swing.JFrame {
             
             case 12 ->{
                 
-                if(txt.getText().contains("\n")){
-                    lch.requestFocus();
-                } else {
-                    Save();
-                }
+                title.requestFocus();
                 
             }//case 12
             
